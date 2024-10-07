@@ -63,7 +63,7 @@ object Huffman {
       leaves match {
         case List() => List(Leaf(freq._1, freq._2))
         case head::tail =>
-          if(freq._1 > head.weight) head::insertOrder(freq, tail)
+          if(freq._2 > head.weight) head::insertOrder(freq, tail)
           else Leaf(freq._1, freq._2)::leaves
       }
     }
