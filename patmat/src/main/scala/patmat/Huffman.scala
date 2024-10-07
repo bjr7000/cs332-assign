@@ -184,7 +184,7 @@ object Huffman {
     def quickEncodeTail(table: CodeTable, text: List[Char], acc: List[Bit]): List[Bit] = {
       text match {
         case List() => acc
-        case head::tail => quickEncodeTail(table, tail, codeBits(table)(head)::acc)
+        case head::tail => quickEncodeTail(table, tail, codeBits(table)(head):::acc)
       }
     }
     quickEncodeTail(convert(tree), text, List())
