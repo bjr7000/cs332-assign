@@ -81,7 +81,7 @@ object Huffman {
 
   def combine(trees: List[CodeTree]): List[CodeTree] = {
     trees match {
-      case head::mid::tail => makeCodeTree(head, mid)::tail
+      case head::mid::tail => (makeCodeTree(head, mid)::tail).sortBy(weight)
       case _ => trees
     }
   }
@@ -126,21 +126,14 @@ object Huffman {
 
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
     @tailrec
-    def contains(c: Char, t: List[Char]): Boolean = {
-      t match {
-        case List() => false
-        case head::tail => if(c == head) true else contains(c, tail)
-      }
-    }
-    @tailrec
     def encodeTail(partTree: CodeTree, text: List[Char], acc: List[Bit]): List[Bit] = {
       text match {
         case List() => acc
         case head::tail => partTree match {
           case Leaf(_, _) => encodeTail(tree, tail, acc)
           case Fork(l, r, _, _) =>
-            if(contains(head, chars(l))) encodeTail(l, text, acc:+0)
-            else if(contains(head, chars(r))) encodeTail(r, text, acc:+1)
+            if(chars(l).contains(head)) encodeTail(l, text, acc:+0)
+            else if(chars(r).contains(head)) encodeTail(r, text, acc:+1)
             else throw new NoSuchElementException("encode: there is a char which is not member of part of tree")
         }
       }
