@@ -93,7 +93,7 @@ object Anagrams {
         case _ => for{
           combination <- combinations(occ)
           validAnagrams <- dictionaryByOccurrences.getOrElse(combination, Nil)
-          afterUsedFoundAnagram <- getAnagrams(subtract(combination, wordOccurrences(validAnagrams)))
+          afterUsedFoundAnagram <- getAnagrams(subtract(occ, wordOccurrences(validAnagrams)))
         } yield validAnagrams::afterUsedFoundAnagram
       }
     }
