@@ -32,7 +32,7 @@ trait Solver extends GameDef {
    * that are inside the terrain.
    */
   def neighborsWithHistory(b: Block, history: List[Move]):
-      Stream[(Block, List[Move])] = b.legalNeighbors.map(n => (b,n._2::history)).toStream
+      Stream[(Block, List[Move])] = b.legalNeighbors.map(n => (n._1,n._2::history)).toStream
 
   /**
    * This function returns the list of neighbors without the block
@@ -66,17 +66,12 @@ trait Solver extends GameDef {
    * construct the correctly sorted stream.
    */
   def from(initial: Stream[(Block, List[Move])], explored: Set[Block]): Stream[(Block, List[Move])] = {
-    @tailrec
-    def fromTail(initial: Stream[(Block, List[Move])], explored: Set[Block], acc: Stream[(Block, List[Move])]):
-        Stream[(Block, List[Move])] = {
       initial match {
-        case Empty => acc
-        case head#::tail =>
+        case Empty => Empty
+        case head #:: tail =>
           val newNeighbor = newNeighborsOnly(neighborsWithHistory(head._1, head._2), explored)
-          fromTail(tail#:::newNeighbor, explored++newNeighbor.map(_._1), head#::acc)
+          head#::from(tail #::: newNeighbor, explored ++ newNeighbor.map(_._1))
       }
-    }
-    fromTail(initial, explored, Empty)
   }
 
   /**
