@@ -70,7 +70,7 @@ trait StringParserTerrain extends GameDef {
       case row =>
         levelVector(row).indexOf(c) match {
           case -1 => throw new NoSuchElementException("findChar: cannot find given character")
-          case col => Pos(row, col)
+          case col => Pos(col, row)
       }
     }
   }
